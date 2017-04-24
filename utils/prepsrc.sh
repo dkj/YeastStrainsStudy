@@ -3,17 +3,17 @@ set -o errexit
 set -o pipefail
 
 thisdir=`pwd`
-
+utilsdir=$(readlink -f $(dirname $0))
 
 ##########################################
 ####### download some utilities ##########
 ##########################################
-cd $thisdir/utils/src
+cd $utilsdir/src
 
 if [ ! -f locpy/bin/activate ]; then
     echo; echo "  creating a local python environment..."
 
-    cd $thisdir/utils/src
+    cd $utilsdir/src
     #wpython=`which python`
     #isvenv=`python ../isvenv.py`
     #if [[ $isvenv == 1 ]]; then 
@@ -41,61 +41,61 @@ if [ ! -f locpy/bin/activate ]; then
         exit 1
     fi
     
-    virtualenv $thisdir/utils/src/locpy  1> /dev/null
+    virtualenv $utilsdir/src/locpy  1> /dev/null
 
-    source $thisdir/utils/src/locpy/bin/activate
-    pip install --upgrade pip  &>   $thisdir/utils/src/locpy/install_output.txt
-    pip install --upgrade distribute &>>   $thisdir/utils/src/locpy/install_output.txt
-    pip install cython &>>   $thisdir/utils/src/locpy/install_output.txt
-    pip install numpy &>>   $thisdir/utils/src/locpy/install_output.txt
-    pip install pandas &>>   $thisdir/utils/src/locpy/install_output.txt
-    pip install panda &>>   $thisdir/utils/src/locpy/install_output.txt
-    pip install matplotlib &>>   $thisdir/utils/src/locpy/install_output.txt
-    pip install seaborn &>>   $thisdir/utils/src/locpy/install_output.txt
-    pip install pbcore &>>   $thisdir/utils/src/locpy/install_output.txt
+    source $utilsdir/src/locpy/bin/activate
+    pip install --upgrade pip  &>   $utilsdir/src/locpy/install_output.txt
+    pip install --upgrade distribute &>>   $utilsdir/src/locpy/install_output.txt
+    pip install cython &>>   $utilsdir/src/locpy/install_output.txt
+    pip install numpy &>>   $utilsdir/src/locpy/install_output.txt
+    pip install pandas &>>   $utilsdir/src/locpy/install_output.txt
+    pip install panda &>>   $utilsdir/src/locpy/install_output.txt
+    pip install matplotlib &>>   $utilsdir/src/locpy/install_output.txt
+    pip install seaborn &>>   $utilsdir/src/locpy/install_output.txt
+    pip install pbcore &>>   $utilsdir/src/locpy/install_output.txt
     deactivate   
 fi
 
-source $thisdir/utils/src/locpy/bin/activate
+source $utilsdir/src/locpy/bin/activate
 
-if [ ! -d  $thisdir/utils/src/poretools ] ; then
+if [ ! -d  $utilsdir/src/poretools ] ; then
     echo " Downloading and installing poretools..."
  
     # used to extract fastq from ont fast5
-    cd $thisdir/utils/src/
+    cd $utilsdir/src/
     git clone https://github.com/arq5x/poretools.git &> /dev/null
     cd poretools/
     git reset --hard 4e04e25f22d03345af97e3d37bd8cf2bdf457fc9   1> /dev/null 
     python setup.py install  &> install_output.txt
 fi
 
-if [ ! -d  $thisdir/utils/src/pbh5tools ] ; then
+if [ ! -d  $utilsdir/src/pbh5tools ] ; then
     echo " Downloading and installing pbh5tools..."
     #used to extract fastq from pacbio hdf5 
-    cd $thisdir/utils/src
-    source $thisdir/utils/src/locpy/bin/activate
-    pip install pysam &>>   $thisdir/utils/src/locpy/install_output.txt
-    pip install h5py &>>   $thisdir/utils/src/locpy/install_output.txt
-    pip install pbcore &>>   $thisdir/utils/src/locpy/install_output.txt
+    cd $utilsdir/src
+    source $utilsdir/src/locpy/bin/activate
+    pip install pysam &>>   $utilsdir/src/locpy/install_output.txt
+    pip install h5py &>>   $utilsdir/src/locpy/install_output.txt
+    pip install pbcore &>>   $utilsdir/src/locpy/install_output.txt
     git clone https://github.com/PacificBiosciences/pbh5tools.git &> /dev/null
     cd pbh5tools
     python setup.py install &> install_output.txt
 fi
 
-if [ ! -d  $thisdir/utils/src/fq2fa ] ; then
+if [ ! -d  $utilsdir/src/fq2fa ] ; then
     echo " Downloading and installing fq2fa..."
     ## fastq 2 fasta
-    cd $thisdir/utils/src
+    cd $utilsdir/src
     git clone -b nogzstream https://github.com/fg6/fq2fa.git &> /dev/null
     cd fq2fa
     make &> install_output.txt
 fi
 
 
-if [ ! -d  $thisdir/utils/src/n50 ] ; then
+if [ ! -d  $utilsdir/src/n50 ] ; then
     echo " Downloading and installing n50..."
     ## calculate fasta/fastq stats
-    cd $thisdir/utils/src
+    cd $utilsdir/src
     git clone -b nogzstream https://github.com/fg6/n50.git  &> /dev/null
     cd n50
     make &> install_output.txt
@@ -103,23 +103,23 @@ fi
 
 
 	
-if [ ! -d  $thisdir/utils/src/random_subreads ] ; then
+if [ ! -d  $utilsdir/src/random_subreads ] ; then
     echo " Downloading and installing random_subreads..."
     ## subsample generator
-    cd $thisdir/utils/src
+    cd $utilsdir/src
     git clone -b YeastStrainsStudy https://github.com/fg6/random_subreads.git &> /dev/null
 fi
 
-if [ ! -d  $thisdir/utils/src/biobambam2-2.0.37-release-20160407134604-x86_64-etch-linux-gnu ] ; then
+if [ ! -d  $utilsdir/src/biobambam2-2.0.37-release-20160407134604-x86_64-etch-linux-gnu ] ; then
     echo " Downloading biobambam/bamtofastq "
-    cd $thisdir/utils/src
+    cd $utilsdir/src
     wget https://github.com/gt1/biobambam2/releases/download/2.0.37-release-20160407134604/biobambam2-2.0.37-release-20160407134604-x86_64-etch-linux-gnu.tar.gz &> /dev/null
      tar -xvzf biobambam2-2.0.37-release-20160407134604-x86_64-etch-linux-gnu.tar.gz > /dev/null
      rm biobambam2-2.0.37-release-20160407134604-x86_64-etch-linux-gnu.tar.gz
 fi
 
-if [ ! -f $thisdir/utils/src/pacbiosub/pacbiosub ]; then
-	cd $thisdir/utils/src/pacbiosub/
+if [ ! -f $utilsdir/src/pacbiosub/pacbiosub ]; then
+	cd $utilsdir/src/pacbiosub/
 	make
 fi
 

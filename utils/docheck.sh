@@ -3,6 +3,7 @@ set -o errexit
 set -o pipefail
 
 thisdir=`pwd`
+utilsdir=$(readlink -f $(dirname $0))
 singlestrain=$1
 
 if [ $singlestrain != "all" ]; then
@@ -34,7 +35,7 @@ miseq_n44=( 504046656 504046656 )
 ontn=( pass2D all2D )
 pacbion=( pacbio pacbio_ontemu_31X )
 
-if [ ! -f  $thisdir/utils/src/n50/n50 ] ; then
+if [ ! -f  $utilsdir/src/n50/n50 ] ; then
     echo Some utilities are missing, please run ./launchme.sh install
     exit
 fi
@@ -60,7 +61,7 @@ for platform in "${platforms[@]}"; do
 	
 	if [ -f $file ]; then 
 	    check=$platform\_${strain}
-	    thischeck=`$thisdir/utils/src/n50/n50 $file | awk '{print $2}'`
+	    thischeck=`$utilsdir/src/n50/n50 $file | awk '{print $2}'`
 
 	    if [ "${!check}" = "$thischeck" ]; then echo "    " $thistrain $file  OK;
 	    else 
@@ -82,7 +83,7 @@ for platform in "${platforms[@]}"; do
 	if [ $platform == "miseq" ]; then 
 	    if [ -f $file ]; then 
 		check=$platform\_${strain}[1]
-		thischeck=`$thisdir/utils/src/n50/n50 $file2 | awk '{print $2}'`
+		thischeck=`$utilsdir/src/n50/n50 $file2 | awk '{print $2}'`
 		
 		if [ "${!check}" = "$thischeck" ]; then echo "    " $thistrain $file2  OK;
 		else 
@@ -109,7 +110,7 @@ for platform in "${platforms[@]}"; do
 	   
 	    if [ -f $file ]; then 
 		check=$platform\_${strain}[1]
-		thischeck=`$thisdir/utils/src/n50/n50 $file | awk '{print $2}'`
+		thischeck=`$utilsdir/src/n50/n50 $file | awk '{print $2}'`
 		if [ "${!check}" = "$thischeck" ]; then echo "    " $thistrain $file  OK;
 		else 
 		    echo; echo "     !!!!!!!!!!!!!!!!!!!!!! Warning !!!!!!!!!!!!!!!!!!!!!!!! " 

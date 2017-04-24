@@ -3,6 +3,7 @@ set -o errexit
 set -o pipefail
 
 thisdir=`pwd`
+softdir=$(readlink -f $(dirname $0))
 
 whattodo=$1
 singlestrain=$2
@@ -28,7 +29,7 @@ if [ $whattodo == "install" ]; then
   echo; echo " Downloading and installing some utilities..."
   ###################################################
 
-	$thisdir/utils/prepsrc.sh
+	$softdir/utils/prepsrc.sh
 	echo "                 ... all srcs ready!"
 fi
 
@@ -39,7 +40,7 @@ if [ $whattodo == "download" ]; then
   echo; echo " Downloading and preparing data..."
   ###################################################
 	cd $thisdir
-	$thisdir/utils/prepdata.sh $singlestrain 0  $forcereload
+	$softdir/utils/prepdata.sh $singlestrain 0  $forcereload
 	echo "                 ... requested data ready!"
 fi
 
@@ -50,7 +51,7 @@ if [ $whattodo == "clean" ]; then
   ###################################################
 
         cd $thisdir
-        $thisdir/utils/prepdata.sh $singlestrain 1
+        $softdir/utils/prepdata.sh $singlestrain 1
         #echo "                 ... cleaned data!"
 fi
 
@@ -60,7 +61,7 @@ if [ $whattodo == "nanoclean" ]; then
   #####################################################################
 
         cd $thisdir
-        $thisdir/utils/prepdata.sh $singlestrain -1
+        $softdir/utils/prepdata.sh $singlestrain -1
         #echo "                 ... cleaned data!"
 fi
 
@@ -71,7 +72,7 @@ if [ $whattodo == "check" ]; then
   echo; echo " Checking fastq files..." 
   ###################################################
         cd $thisdir
-        $thisdir/utils/docheck.sh $singlestrain
+        $softdir/utils/docheck.sh $singlestrain
 fi
 
 if [ $whattodo == "deepcheck" ]; then
@@ -79,7 +80,7 @@ if [ $whattodo == "deepcheck" ]; then
   echo; echo " Checking intermediate files..." 
   ###################################################
         cd $thisdir
-        $thisdir/utils/deepcheck.sh $singlestrain 
+        $softdir/utils/deepcheck.sh $singlestrain 
 fi
 
 

@@ -3,6 +3,7 @@ set -o errexit
 set -o pipefail
 
 thisdir=`pwd`
+utilsdir=$(readlink -f $(dirname $0))
 singlestrain=$1
 
 if [ $singlestrain != "all" ]; then
@@ -18,13 +19,13 @@ miseq_n44=( fastqs/miseq/18429_1_3.cram )
 miseq_sk1=( fastqs/miseq/18429_1_4.cram )
 
 
-if [ ! -f  $thisdir/utils/src/n50/n50 ] ; then
+if [ ! -f  $utilsdir/src/n50/n50 ] ; then
     echo Some utilities are missing, please run ./launchme.sh install
     exit
 fi
 
 platforms=( miseq )
-fqlist="$thisdir/utils/fastq_bases.list"
+fqlist="$utilsdir/fastq_bases.list"
 
 
 errors=0
@@ -46,7 +47,7 @@ for platform in "${platforms[@]}"; do
 
 	    
             if [ -f $thisdir/$file ]; then ## file exists
-		thischeck=`$thisdir/utils/src/n50/n50 $thisdir/$file | awk '{print $2}'`
+		thischeck=`$utilsdir/src/n50/n50 $thisdir/$file | awk '{print $2}'`
 		if [ $check != "$thischeck" ]; then 
 		    echo; echo "     !!!!!!!!!!!!!!!!!!!!!! Warning !!!!!!!!!!!!!!!!!!!!!!!! " 
 		    echo "     !!!! " $file  NOT OK ;  
@@ -76,7 +77,7 @@ for platform in "${platforms[@]}"; do
 		    folderok=0
 		    if [ -d $thisfolder ]; then
 			foldcheck=`du -sh $thisfolder | awk '{print $1}'`
-			ocheck=`grep $(basename $thisfolder) $thisdir/utils/f5folders.list | awk '{print $1}'`
+			ocheck=`grep $(basename $thisfolder) $utilsdir/f5folders.list | awk '{print $1}'`
 			
 			
 			if [ $foldcheck != $ocheck ]; then 
@@ -90,7 +91,7 @@ for platform in "${platforms[@]}"; do
 			if [ -f $thistar ]; then
 			    
 			    tarcheck=`md5sum $thistar | awk '{print $1}'`
-			    ocheck=`grep $(basename $thistar) $thisdir/utils/checksum.list | awk '{print $1}'`
+			    ocheck=`grep $(basename $thistar) $utilsdir/checksum.list | awk '{print $1}'`
 			    
 			    if [ $tarcheck != $ocheck ]; then 
 				echo; echo "     *** PROBLEM FOUND! ***"   
@@ -132,7 +133,7 @@ for platform in "${platforms[@]}"; do
 			thisfile=${file%.*}.$h5file
 			if [ -f $thisfile ]; then
 			    h5check=`md5sum $thisfile | awk '{print $1}'`
-			    ocheck=`grep $(basename $thisfile) $thisdir/utils/checksum.list | awk '{print $1}'`
+			    ocheck=`grep $(basename $thisfile) $utilsdir/checksum.list | awk '{print $1}'`
 
 			    if [ $h5check != $ocheck ]; then 
 				isok=0
@@ -161,7 +162,7 @@ for platform in "${platforms[@]}"; do
 		    for cramfile  in "${!thislist}"; do   # loop over ont runs		    
 			if [ -f $cramfile ]; then
 			    check=`md5sum $cramfile | awk '{print $1}'`
-			    ocheck=`grep $(basename $cramfile) $thisdir/utils/checksum.list | awk '{print $1}'`
+			    ocheck=`grep $(basename $cramfile) $utilsdir/checksum.list | awk '{print $1}'`
 
 		
 			    if [ $check != $ocheck ]; then 

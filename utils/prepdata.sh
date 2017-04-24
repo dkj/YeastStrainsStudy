@@ -3,12 +3,13 @@ set -o errexit
 set -o pipefail
 
 thisdir=`pwd`
+utilsdir=$(readlink -f $(dirname $0))
 singlestrain=$1
 clean=$2
 force=$3
 
 
-source $thisdir/utils/src/locpy/bin/activate
+source $utilsdir/src/locpy/bin/activate
 
 
 if [ $# -lt 2 ]  || [ $1 == '-h' ]; then
@@ -89,11 +90,11 @@ fi
 
 
 # get name and location of data
-source $thisdir/utils/runlist.sh
+source $utilsdir/runlist.sh
 
 
 #use local python
-source $thisdir/utils/src/locpy/bin/activate
+source $utilsdir/src/locpy/bin/activate
 
 ##############################################
 #******************* ONT ******************* #
@@ -402,7 +403,7 @@ for strain in "${strains[@]}"; do   ## loop on strains
 			echo "           extracting fastqs using bash5tools.py" $file >> $ofile
 		    #echo "           extracting fastqs using bash5tools.py" $file 
 			if [ ! -f $(basename $file .bas.h5).fastq ]; then
-			    python $thisdir/utils/src/pbh5tools/bin/bash5tools.py --minLength 500 --minReadScore 0.8000 --readType subreads --outType fastq $file #&>>$ofile 
+			    python $utilsdir/src/pbh5tools/bin/bash5tools.py --minLength 500 --minReadScore 0.8000 --readType subreads --outType fastq $file #&>>$ofile 
 			fi
 		    done
 		fi
@@ -438,7 +439,7 @@ for strain in "${strains[@]}"; do   ## loop on strains
 		if [ $strain == "s288c" ] && [ ! -f s288c_pacbio_ontemu_31X.fastq ] ; then
 		    echo "           recreating pacbio s288c subsample 31X ONT-Emu"  
 		    echo "           recreating pacbio s288c subsample 31X ONT-Emu"  >> $ofile
-		    $thisdir/utils/src/pacbiosub/pacbiosub $strain\_pacbio.fastq $thisdir/utils/src/pacbiosub/pacbio_31X_reads.txt &>>$ofile 
+		    $utilsdir/src/pacbiosub/pacbiosub $strain\_pacbio.fastq $utilsdir/src/pacbiosub/pacbio_31X_reads.txt &>>$ofile 
 		fi
 		
 	    else
@@ -522,7 +523,7 @@ for strain in "${strains[@]}"; do
 
 		if [ -f $folder/$myfile ]; then
 		    rm -f $strain\_1.fastq $strain\_2.fastq
-		    $thisdir/utils/src/biobambam2-2.0.37-release-20160407134604-x86_64-etch-linux-gnu/bin/bamtofastq inputformat=cram exclude=SECONDARY,SUPPLEMENTARY,QCFAIL F=$strain\_1.fastq F2=$strain\_2.fastq < $myfile &>>$ofile  
+		    $utilsdir/src/biobambam2-2.0.37-release-20160407134604-x86_64-etch-linux-gnu/bin/bamtofastq inputformat=cram exclude=SECONDARY,SUPPLEMENTARY,QCFAIL F=$strain\_1.fastq F2=$strain\_2.fastq < $myfile &>>$ofile  
 		    
 		    
    		    #if `grep "failed" $ofile`  &> /dev/null; then
