@@ -497,12 +497,11 @@ for strain in "${strains[@]}"; do
 		if [ $forcereload -eq 1 ]; then rm -f $strain\_?.fastq; fi
 				
 		if [ ! -f $folder/$myfile ]; then
-		    if [[ `wget -S --spider $file 2>&1  | grep exists` ]]; then
-			wget  -nv -c $file &> $wgetfile 
+			wget  -nv -c -O $myfile $file &> $wgetfile 
 			
 			if [[ "$?" != 0 ]]; then
 			    echo "     Error downloading file" $file >> $ofile ; echo "      Trying to download again..."
-			    wget  -nv -c $file &>> $wgetfile 
+			    wget  -nv -c -O $myfile $file &>> $wgetfile 
 			    
 			    if [[ "$?" != 0 ]]; then
 				echo "     Failed again, error downloading file" $file >>$ofile ; echo "Please re-launch the script!" >>$ofile
@@ -516,9 +515,6 @@ for strain in "${strains[@]}"; do
 				exit
 			    fi
 			fi
-		    else 
-			echo "Could not find url " $file
-		    fi # if no cramfile found
 		fi
 
 		if [ -f $folder/$myfile ]; then
