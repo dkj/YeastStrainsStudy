@@ -50,5 +50,6 @@ curl -L 'https://github.com/mdcao/japsa/releases/download/v1.7-02a/JapsaRelease.
 cd JapsaRelease && java -cp japsa.jar:libs/guava-18.0.jar japsa.util.deploy.Deploy --mode install --libs :colloquial.jar:commons-math3-3.0.jar:jhdf5.jar:jhdfobj.jar:htsjdk-1.126.jar:guava-18.0.jar:jcommon-1.0.23.jar:jfreechart-1.0.19.jar:JRIEngine.jar:JRI.jar::     --compiler "javac 1.8.0_121" --installDir=/usr/local --server=yes --xmx=7000m --jlp=/usr/local/lib/R/site-library/rJava/jri
 #make install #&& INSTALL_DIR=/usr/local MXMEM=7000m SERVER=true JLP=/usr/lib/jni:/usr/lib/R/site-library/rJava/jri ./install
 #cd JapsaRelease && make install [INSTALL_DIR=/usr/local] [MXMEM=7000m] [SERVER=true] [JLP=/usr/lib/jni:/usr/lib/R/site-library/rJava/jri] && ./install
+RUN apt-get install -y python virtualenv
 RUN apt-get clean
 #RUN rm -rf /tmp/build
