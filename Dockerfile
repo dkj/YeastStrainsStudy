@@ -1,4 +1,4 @@
-FROM debian:8.7
+FROM ubuntu:16.04
 MAINTAINER David K. Jackson <david.jackson+YeastStrainsStudy@sanger.ac.uk>
 RUN apt-get update
 RUN apt-get install -y curl git python g++ make
@@ -43,8 +43,7 @@ git clone -b spades_3.10.1 https://github.com/ablab/spades.git  && cd spades/ass
 PREFIX=/usr/local ./spades_compile.sh
 RUN cd /tmp/build && \
 git clone https://github.com/isovic/racon.git  && cd racon && make modules && make tools && make -j && cp bin/racon /usr/local/bin/
-RUN echo deb http://deb.debian.org/debian jessie-backports main > /etc/apt/sources.list.d/backports.list && apt-get update
-RUN apt-get install -y  -t jessie-backports openjdk-8-jre-headless openjdk-8-jdk-headless r-base-core
+RUN apt-get install -y  openjdk-8-jre-headless openjdk-8-jdk-headless r-base-core
 RUN R CMD javareconf && echo 'install.packages("rJava",repos="http://cran.r-project.org")' | R --vanilla
 RUN cd /tmp/build && \
 curl -L 'https://github.com/mdcao/japsa/releases/download/v1.7-02a/JapsaRelease.tar.gz' | tar xzf - && \
